@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@blurtfoundation/blurtjs": "^0.1.1",
     "@react-pdf/renderer": "^1.6.3",
     "antd": "^3.16.3",
     "cross-fetch": "^3.0.2",
