@@ -1,12 +1,35 @@
 import React, { Component } from 'react';
-import { PageHeader, Row, Col, Icon, Card } from 'antd';
-import { NavLink } from 'react-router-dom';
-import blurt from '@blurtfoundation/blurt-js';
+import {
+  PageHeader, Row, Col, Card,
+  Form, Input, Button,
+} from 'antd';
+import blurt from '@blurtfoundation/blurtjs';
 
 import 'antd/dist/antd.css';
 import './Home.css';
 
+blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 16,
+      offset: 8,
+    },
+  },
+};
+
 class ClientHome extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      username : '',
+    };
+  }
 
   componentDidMount() {
     this.getRequiredInfoFromAPI();
@@ -25,17 +48,35 @@ class ClientHome extends Component {
     });
   }
 
+  handleSubmit = async e => {
+    e.preventDefault();
+    const { username } = this.state;
+    blurt.api.getAccounts([username], function(err, result) {
+      console.log(err, result);
+    });
+  };
+
   render() {
     return (
       <PageHeader>
         <div className="wrap">
           <div className="extraContent">
-            <Row gutter={16} style={{margin: "10px"}}>
-              <Col xs={24} sm={24} md={24} lg={8}>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={12}>
                 <Card style={{display: "flex", justifyContent: "center"}}>
-                  <NavLink to="/members">
-                    <Icon type="team" style={{ fontSize: '4em', color: '#08c' }} />
-                  </NavLink>
+                  <Form layout="inline" onSubmit={this.handleSubmit}>
+                    <Form.Item
+                      label="Username:"
+                    >
+                      <Input
+                        value={this.state.username}
+                        onChange={e => this.setState({ username: e.target.value })}
+                      />
+                    </Form.Item>
+                    <Form.Item {...tailFormItemLayout}>
+                      <Button type="primary" htmlType="submit">Login</Button>
+                    </Form.Item>
+                  </Form>
                 </Card>
               </Col>
             </Row>
