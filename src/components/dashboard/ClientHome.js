@@ -43,15 +43,12 @@ class ClientHome extends Component {
 
   getRequiredInfoFromAPI = async () => {
     this.setState({ loadingRecord: true });
-    blurt.api.getAccounts(['megadrive', 'jacobgadikian'], function(err, result) {
-      console.log(err, result);
-    });
   }
 
   handleSubmit = async e => {
     e.preventDefault();
     const { username } = this.state;
-    blurt.api.getAccounts([username], function(err, result) {
+    blurt.api.getDiscussionsByAuthorBeforeDate(username, "", "2020-09-12T00:00:00", 100, function(err, result) {
       console.log(err, result);
     });
   };
