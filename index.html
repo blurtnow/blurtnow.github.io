@@ -1,0 +1,11 @@
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@blurtfoundation/blurtjs/dist/blurt.min.js"></script>
+  <script>
+    blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
+    blurt.api.getAccounts(['baabeetaa', 'jacobgadikian'], function(err, response){
+        console.log(err, response);
+    });
+  </script>
+</head>
+</html>

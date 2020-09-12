@@ -28,7 +28,77 @@ class ClientHome extends Component {
     super(props)
     this.state = {
       username : '',
+      posts: [],
     };
+  }
+
+  createTableColumns = async () => {
+    this.columns = [
+      {
+        title: 'No',
+        dataIndex: 'rowKey',
+        key: 'roKey._id',
+        render: rowKey =>
+          <NavLink
+            style={{ padding: 10 }}
+            to={`/bank_accounts/${rowKey._id}/edit`}
+          >
+            <Icon type={"edit"}/>
+          </NavLink>,
+      },
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        render: name => <span>{name}</span>,
+      },
+      {
+        title: 'Is Active',
+        dataIndex: 'isActive',
+        key: 'isActive',
+        render: isActive => <span>{isActive ? 'Y' : 'N'}</span>,
+      },
+      {
+        title: 'Receipt Prefix',
+        dataIndex: 'receiptPrefix',
+        key: 'receiptPrefix',
+        render: receiptPrefix => <span>{receiptPrefix}</span>,
+      },
+      {
+        title: 'Bank',
+        dataIndex: 'bank',
+        key: 'bank',
+        render: bank => <span>{bank}</span>,
+      },
+      {
+        title: 'Account Number',
+        dataIndex: 'accountNumber',
+        key: 'accountNumber',
+        render: accountNumber => <span>{accountNumber}</span>,
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+          <span>
+            <NavLink
+              to={`/bank_accounts/${record._id}/edit`}
+            >
+              <Button block type="link">
+                <Icon type={"edit"}/>
+              </Button>
+            </NavLink>
+            <NavLink
+              to={`/bank_accounts/${record._id}/history`}
+            >
+              <Button block type="link">
+                <Icon type={"audit"}/>
+              </Button>
+            </NavLink>
+          </span>
+        ),
+      },
+    ];
   }
 
   componentDidMount() {
@@ -54,6 +124,7 @@ class ClientHome extends Component {
   };
 
   render() {
+    this.createTableColumns();
     return (
       <PageHeader>
         <div className="wrap">
