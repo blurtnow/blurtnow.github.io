@@ -212,6 +212,10 @@
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             authorRewardsTable.append(row);
           });
+          if($('#latestAuthorRewards tr').length === 0) {
+            var row = $('<tr><td><small>No results...</small></td></tr>');
+            authorRewardsTable.append(row);
+          }
 
           let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward")
           let curationRewardsTable = $('#latestCurationRewards');
@@ -223,6 +227,10 @@
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             curationRewardsTable.append(row);
           });
+          if($('#latestCurationRewards tr').length === 0) {
+            var row = $('<tr><td><small>No results...</small></td></tr>');
+            curationRewardsTable.append(row);
+          }
 
           let votes = response.slice(0).filter(item => item[1].op[0] === "vote" && item[1].op[1].author === username)
           let votesTable = $('#latestUpvotes');
@@ -234,6 +242,10 @@
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `<a href="${BLURT_WORLD}/@${voter}" target="_blank">${voter}</a> (${voteWeight}%) upvote <i>${permlink}</i>` + '</small></td></tr>');
             votesTable.append(row);
           });
+          if($('#latestUpvotes tr').length === 0) {
+            var row = $('<tr><td><small>No results...</small></td></tr>');
+            votesTable.append(row);
+          }
 
         });
       }
@@ -251,13 +263,16 @@
       getPosts();
       getAccountHistory();
       $("#save").on('click', function() {
-        $("#latestPosts tr").remove();
+        $("#latestUpvotes tr").remove();
+        $("#latestCurationRewards tr").remove();
         $("#latestAuthorRewards tr").remove();
+        $("#latestPosts tr").remove();
 
         let username = $("#username").val();
         window.localStorage.setItem("username", username);
         $("#usernameDisp").text(username);
         getPosts();
+        getAccountHistory();
       });
       
     </script>
