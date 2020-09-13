@@ -40,10 +40,10 @@
                                     </td>
                                     <td>
                                       <div style="justify-content: center;">
-                                        Your <span id="sliderPercent">1</span>% upvote is worth:
+                                        Your <span id="voteWeight">1</span>% upvote is worth:
                                       </div>
                                       <div>
-                                        <div id="slider">Slider</div>
+                                        <input id="voteSlider" type="range" style="width:120px" min="1" max="100" step="1" value="100" />
                                       </div>
                                       <div>
                                         $<span id="voteValue">0.00</span>
@@ -51,7 +51,6 @@
                                     </td>
                                   </tr>
                                 </table>
-
                               </div>
                           </div>
                       </div>
@@ -197,6 +196,13 @@
 
           vesting_shares = parseFloat(vesting_shares.split(" ")[0]).toFixed(3);
           $("#vestingShares").val(vesting_shares + " BP");
+
+          $("#voteSlider").on("input", function() {
+            $("#voteWeight").text($(this).val())
+          });
+          $("#voteSlider").on("change", function() {
+            // TO DO:
+          });
         });
       }
 

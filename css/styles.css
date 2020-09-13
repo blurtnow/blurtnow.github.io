@@ -10260,3 +10260,10 @@ body {
 .sb-sidenav-light .sb-sidenav-footer {
   background-color: #e9ecef;
 }
+
+#voteSliderBC .slider-selection {
+	background: #8283FF;
+}
+#voteSliderBC .slider-handle {
+	border-bottom-color: blue;
+}
