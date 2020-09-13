@@ -37,27 +37,33 @@
                               <i class="fas fa-dollar-sign mr-1"></i>
                             <small>Daily Rewards</small>
                           </div>
-                          <div class="card-body">
-                            <table class="table table-sm table-borderless">
-                              <tbody>
-                                <tr>
-                                  <th scope="row"><small>Curation Today</small></th>
-                                  <td><small>Mark</small></td>
-                                </tr>
-                                <tr>
-                                  <th scope="row"><small>Author Today</small></th>
-                                  <td><small>Jacob</small></td>
-                                </tr>
-                                <tr>
-                                  <th scope="row"><small>Curation Yesterday</small></th>
-                                  <td><small>Larry</small></td>
-                                </tr>
-                                <tr>
-                                  <th scope="row"><small>Author Yesterday</small></th>
-                                  <td><small>Larry</small></td>
-                                </tr>
-                              </tbody>
-                            </table>
+                          <div class="card-body pt-0 pb-0">
+                            <div>
+                              <div class="form-group row mb-0">
+                                <label for="staticEmail" class="col-sm-6 col-form-label col-form-label-sm">Curation Today</label>
+                                <div class="col-sm-6">
+                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="curationRewardsToday" value="0.0 BP" />
+                                </div>
+                              </div>
+                              <div class="form-group row mb-0">
+                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Author Today</label>
+                                <div class="col-sm-6">
+                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="authorRewardsToday" value="0.0 BP" />
+                                </div>
+                              </div>
+                              <div class="form-group row mb-0">
+                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Curation Yesterday</label>
+                                <div class="col-sm-6">
+                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="curationRewardsYesterday" value="0.0 BP" />
+                                </div>
+                              </div>
+                              <div class="form-group row mb-0">
+                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Author Yesterday</label>
+                                <div class="col-sm-6">
+                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="authorRewardsYesterday" value="0.0 BP" />
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -70,14 +76,14 @@
                           <div class="card-body">
                             <form>
                               <div class="form-group row">
-                                <label for="staticEmail" class="col-sm-4 col-form-label col-form-label-sm">Username</label>
-                                <div class="col-sm-8">
+                                <label for="staticEmail" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm">Username</label>
+                                <div class="col-lg-8 col-md-9 col-sm-9">
                                   <input type="text" class="form-control form-control-sm" id="username" value="eastmael">
                                 </div>
                               </div>
                               <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-4 col-form-label col-form-label-sm"></label>
-                                <div class="col-sm-8">
+                                <label for="inputPassword" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm"></label>
+                                <div class="col-lg-8 col-md-9 col-sm-9">
                                   <button type="submit" class="btn btn-primary mb-2 btn-sm" id="save">Save</button>
                                 </div>
                               </div>
@@ -140,11 +146,6 @@
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">&copy; blurtnow.com by <a href="https://blurt.world/@eastmael">@eastmael</a> for <a href="https://blurt.world">blurt</a></div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
                     </div>
                 </div>
             </footer>
@@ -199,11 +200,12 @@
 
       function getAccountHistory() {
         const username = $("#username").val();
-        let today = moment().utc().format().split("Z")[0];
+        let today = moment().utc();
 
         blurt.api.getAccountHistory(username, -1, 1000, function(err, response){
           let authorRewards = response.slice(0).filter(item => item[1].op[0] === "author_reward")
           let authorRewardsTable = $('#latestAuthorRewards');
+          let authorRewardsToday = 0.0, authorRewardsYesterday = 0.0;
           authorRewards.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { author, vesting_payout, permlink } = op[1];
@@ -211,7 +213,19 @@
             let title = `@${author}/${permlink}`;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             authorRewardsTable.append(row);
+
+            if (today.isSame(moment(timestamp), "day")) {
+              authorRewardsToday += parseFloat(vesting_payout.split(" ")[0]);
+            } else if (today.subtract(1, 'days').isSame(moment(timestamp), "day")) {
+              authorRewardsYesterday += parseFloat(vesting_payout.split(" ")[0]);
+            }
           });
+          
+          let authRewTodTxt = authorRewardsToday.toFixed(2) + " BP";
+          $('#authorRewardsToday').val(authRewTodTxt);
+          let authRewYesTxt = authorRewardsYesterday.toFixed(2) + " BP";
+          $('#authorRewardsYesterday').val(authRewYesTxt);
+
           if($('#latestAuthorRewards tr').length === 0) {
             var row = $('<tr><td><small>No results...</small></td></tr>');
             authorRewardsTable.append(row);
@@ -219,6 +233,7 @@
 
           let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward")
           let curationRewardsTable = $('#latestCurationRewards');
+          let curationRewardsToday = 0.0, curationRewardsYesterday = 0.0;
           curationRewards.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { comment_author, reward, comment_permlink } = op[1];
@@ -226,7 +241,19 @@
             let title = `@${comment_author}/${comment_permlink}`;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             curationRewardsTable.append(row);
+
+            if (today.isSame(moment(timestamp), "day")) {
+              curationRewardsToday += parseFloat(reward.split(" ")[0]);
+            } else if (today.subtract(1, 'days').isSame(moment(timestamp), "day")) {
+              curationRewardsYesterday += parseFloat(reward.split(" ")[0]);
+            }
           });
+
+          let curRewTodTxt = curationRewardsToday.toFixed(2) + " BP";
+          $('#curationRewardsToday').val(curRewTodTxt);
+          let curRewYesTxt = curationRewardsYesterday.toFixed(2) + " BP";
+          $('#curationRewardsYesterday').val(curRewYesTxt);
+
           if($('#latestCurationRewards tr').length === 0) {
             var row = $('<tr><td><small>No results...</small></td></tr>');
             curationRewardsTable.append(row);
