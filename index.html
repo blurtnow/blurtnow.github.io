@@ -196,12 +196,21 @@
         });
       }
 
-      let username = $("#username").val();
+      let username = "";
+      let storedUsername = window.localStorage.getItem("username");
+      if (storedUsername) {
+        $("#username").val(storedUsername);
+        username = storedUsername;
+      } else {
+        username = $("#username").val();
+      }
       $("#usernameDisp").text(username);
+
       getPosts();
       $("#save").on('click', function() {
         $("#latestPosts tr").remove();
         let username = $("#username").val();
+        window.localStorage.setItem("username", username);
         $("#usernameDisp").text(username);
         getPosts();
       });
