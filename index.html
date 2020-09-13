@@ -159,6 +159,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
     <script>
       const BLURT_WORLD = "https://blurt.world/";
+      const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
       blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
       function getPosts() {
@@ -181,18 +182,49 @@
             let timeAgo = moment(created).fromNow();
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
-              console.log('latestPost', latestPost)
-              toPayoutDate = latestPost.add(7, 'd');
               totalRewards = totalRewards + parseFloat(payout.split("BLURT")[0]);
               var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}/${url}">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
           });
 
-          console.log('toPayoutDate', toPayoutDate)
-          var row = $('<tr><td><small>' + `${latestPost.to(toPayoutDate)}` + '</small></td><td><small>' + `${totalRewards.toFixed(2)} BLURT | Total Pending Rewards` + '</small></td></tr>');
-          table.append(row);
-          $('#latestPosts').append(table);
+          if (totalRewards > 0) {
+            var row = $('<tr><td><small>' + `${latestPost.to(toPayoutDate)}` + '</small></td><td><small>' + `${totalRewards.toFixed(2)} BLURT | Total Pending Rewards` + '</small></td></tr>');
+            table.append(row);
+          } else {
+            var row = $('<tr><td><small>No results...</small></td></tr>');
+            table.append(row);
+          }
+        });
+      }
+
+      function getAccountHistory() {
+        const username = $("#username").val();
+        let today = moment().utc().format().split("Z")[0];
+
+        blurt.api.getAccountHistory(username, -1, 1000, function(err, response){
+          let authorRewards = response.slice(0).filter(item => item[1].op[0] === "author_reward")
+          let authorRewardsTable = $('#latestAuthorRewards');
+          authorRewards.forEach(item => {
+            let { block, op, timestamp } = item[1];
+            let { author, vesting_payout, permlink } = op[1];
+            let timeAgo = moment(timestamp).fromNow();
+            let title = `@${author}/${permlink}`;
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
+            authorRewardsTable.append(row);
+          });
+
+          let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward")
+          console.log('curationRewards', curationRewards);
+          let curationRewardsTable = $('#latestCurationRewards');
+          curationRewards.forEach(item => {
+            let { block, op, timestamp } = item[1];
+            let { comment_author, reward, comment_permlink } = op[1];
+            let timeAgo = moment(timestamp).fromNow();
+            let title = `@${comment_author}/${comment_permlink}`;
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
+            curationRewardsTable.append(row);
+          });
         });
       }
 
@@ -207,8 +239,11 @@
       $("#usernameDisp").text(username);
 
       getPosts();
+      getAccountHistory();
       $("#save").on('click', function() {
         $("#latestPosts tr").remove();
+        $("#latestAuthorRewards tr").remove();
+
         let username = $("#username").val();
         window.localStorage.setItem("username", username);
         $("#usernameDisp").text(username);
