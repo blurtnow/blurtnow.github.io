@@ -38,7 +38,7 @@
                             <small>Daily Rewards</small>
                           </div>
                           <div class="card-body">
-                            <table class="table table-borderless">
+                            <table class="table table-sm table-borderless">
                               <tbody>
                                 <tr>
                                   <th scope="row"><small>Curation Today</small></th>
@@ -92,8 +92,8 @@
                           <small>Latest Upvotes</small>
                       </div>
                       <div class="card-body">
-                          <div class="table-responsive">
-                              <table class="table table-borderless" id="latestUpvotes" width="100%" cellspacing="0">
+                          <div class="table-responsive-lg" style="max-height: 150px;overflow-y: auto;">
+                              <table class="table table-sm table-borderless" id="latestUpvotes" width="100%" cellspacing="0">
                               </table>
                           </div>
                       </div>
@@ -104,8 +104,8 @@
                           <small>Latest Curation Rewards</small>
                       </div>
                       <div class="card-body">
-                          <div class="table-responsive">
-                              <table class="table table-borderless" id="latestCurationRewards" width="100%" cellspacing="0">
+                          <div class="table-responsive-lg" style="max-height: 150px;overflow-y: auto;">
+                              <table class="table table-sm table-borderless" id="latestCurationRewards" width="100%" cellspacing="0">
                               </table>
                           </div>
                       </div>
@@ -116,8 +116,8 @@
                           <small>Latest Author Rewards</small>
                       </div>
                       <div class="card-body">
-                          <div class="table-responsive">
-                              <table class="table table-borderless" id="latestAuthorRewards" width="100%" cellspacing="0">
+                          <div class="table-responsive-lg" style="max-height: 150px;overflow-y: auto;">
+                              <table class="table table-sm table-borderless" id="latestAuthorRewards" width="100%" cellspacing="0">
                               </table>
                           </div>
                       </div>
@@ -128,8 +128,8 @@
                             <small>Latest Posts</small>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-borderless" id="latestPosts" width="100%" cellspacing="0">
+                            <div class="table-responsive-lg" style="max-height: 150px;overflow-y: auto;">
+                                <table class="table table-sm table-borderless" id="latestPosts" width="100%" cellspacing="0">
                                 </table>
                             </div>
                         </div>
@@ -167,7 +167,6 @@
         let today = moment().utc().format().split("Z")[0];
 
         blurt.api.getDiscussionsByAuthorBeforeDate(username, "", today, 100, function(err, response){
-          console.log('response', response);
           var table = $('#latestPosts');
           let totalRewards = 0;
           let latestPost = moment();
@@ -195,6 +194,17 @@
             var row = $('<tr><td><small>No results...</small></td></tr>');
             table.append(row);
           }
+
+          let votes = response.slice(0).filter(item => item[1].op[0] === "vote")
+          let votesTable = $('#latestUpvotes');
+          votes.forEach(item => {
+            let { block, op, timestamp } = item[1];
+            let { author, vesting_payout, permlink } = op[1];
+            let timeAgo = moment(timestamp).fromNow();
+            let title = `@${author}/${permlink}`;
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
+            authorRewardsTable.append(row);
+          });
         });
       }
 
@@ -215,7 +225,6 @@
           });
 
           let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward")
-          console.log('curationRewards', curationRewards);
           let curationRewardsTable = $('#latestCurationRewards');
           curationRewards.forEach(item => {
             let { block, op, timestamp } = item[1];
