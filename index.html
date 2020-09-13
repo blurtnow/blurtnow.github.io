@@ -11,49 +11,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
   </head>
   <body class="container">
-    <header class="py-4 bg-dark mt-auto">
-      <div class="container-fluid">
-        <div class="d-flex align-items-center justify-content-between small">
-        </div>
-    </div>
-    </header>
-    <div class="row justify-content-md-center">
-        <div id="layoutSidenav_content">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-sm-12">
             <main>
                 <div class="container-fluid">
                     <div>
                       &nbsp;
                     </div>
                     <div class="row">
-                      <div class="col-md-4 col-sm-12">
+                      <div class="col-lg-4 col-md-12 col-sm-12">
                           <div class="card mb-4">
                               <div class="card-header">
                                   <i class="fas fa-chart-area mr-1"></i>
-                                  <small>Area Chart Example</small>
+                                  @<small id="usernameDisp"></small>
                               </div>
                               <div class="card-body">
-                                <form class="form-inline">
-                                  <div class="form-group mb-2">
-                                    <label for="staticEmail2" class="sr-only">Email</label>
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
-                                  </div>
-                                  <div class="form-group mx-sm-3 mb-2">
-                                    <label for="inputPassword2" class="sr-only">Password</label>
-                                    <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
-                                  </div>
-                                  <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-                                </form>
                               </div>
                           </div>
                       </div>
-                      <div class="col-md-4 col-sm-12">
+                      <div class="col-lg-4 col-md-12 col-sm-12">
                         <div class="card mb-4">
                           <div class="card-header">
                               <i class="fas fa-dollar-sign mr-1"></i>
                             <small>Daily Rewards</small>
                           </div>
                           <div class="card-body">
-                            <table class="table">
+                            <table class="table table-borderless">
                               <tbody>
                                 <tr>
                                   <th scope="row"><small>Curation Today</small></th>
@@ -76,7 +59,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-4 col-sm-12">
+                      <div class="col-lg-4 col-md-12 col-sm-12">
                         <div class="card mb-4">
                           <div class="card-header">
                               <i class="fas fa-user-cog mr-1"></i>
@@ -101,25 +84,41 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-area mr-1"></i>
-                                    <small>Area Chart Example</small>
-                                </div>
-                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar mr-1"></i>
-                                  <small>Bar Chart Example</small>
-                                </div>
-                                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                            </div>
-                        </div>
+                    <div class="card mb-4">
+                      <div class="card-header">
+                          <i class="fas fa-table mr-1"></i>
+                          <small>Latest Upvotes</small>
+                      </div>
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table table-borderless" id="latestUpvotes" width="100%" cellspacing="0">
+                              </table>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card mb-4">
+                      <div class="card-header">
+                          <i class="fas fa-table mr-1"></i>
+                          <small>Latest Curation Rewards</small>
+                      </div>
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table table-borderless" id="latestCurationRewards" width="100%" cellspacing="0">
+                              </table>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card mb-4">
+                      <div class="card-header">
+                          <i class="fas fa-table mr-1"></i>
+                          <small>Latest Author Rewards</small>
+                      </div>
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table table-borderless" id="latestAuthorRewards" width="100%" cellspacing="0">
+                              </table>
+                          </div>
+                      </div>
                     </div>
                     <div class="card mb-4">
                         <div class="card-header">
@@ -128,7 +127,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-borderless" id="latestPosts" width="100%" cellspacing="0">
                                 </table>
                             </div>
                         </div>
@@ -166,7 +165,7 @@
 
         blurt.api.getDiscussionsByAuthorBeforeDate(username, "", today, 100, function(err, response){
           console.log('response', response);
-          var table = $('#dataTable');
+          var table = $('#latestPosts');
           let totalRewards = 0;
           let latestPost = moment();
           let toPayoutDate = moment();
@@ -191,13 +190,17 @@
           console.log('toPayoutDate', toPayoutDate)
           var row = $('<tr><td><small>' + `${latestPost.to(toPayoutDate)}` + '</small></td><td><small>' + `${totalRewards.toFixed(2)} BLURT | Total Pending Rewards` + '</small></td></tr>');
           table.append(row);
-          $('#dataTable').append(table);
+          $('#latestPosts').append(table);
         });
       }
 
+      let username = $("#username").val();
+      $("#usernameDisp").text(username);
       getPosts();
       $("#save").on('click', function() {
-        $("#dataTable tr").remove();
+        $("#latestPosts tr").remove();
+        let username = $("#username").val();
+        $("#usernameDisp").text(username);
         getPosts();
       });
       
