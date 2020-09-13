@@ -255,7 +255,7 @@
             let { author, vesting_payout, permlink } = op[1];
             let timeAgo = moment(timestamp).fromNow();
             let title = `@${author}/${permlink}`;
-            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             authorRewardsTable.append(row);
 
             if (today.isSame(moment(timestamp), "day")) {
@@ -283,7 +283,7 @@
             let { comment_author, reward, comment_permlink } = op[1];
             let timeAgo = moment(timestamp).fromNow();
             let title = `@${comment_author}/${comment_permlink}`;
-            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             curationRewardsTable.append(row);
 
             if (today.isSame(moment(timestamp), "day")) {
