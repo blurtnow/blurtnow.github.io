@@ -10,9 +10,7 @@
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
   </head>
-  <body class="sb-nav-fixed sb-sidenav-toggled">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    </nav>
+  <body class="container">
     <div id="layoutSidenav">
         <div id="layoutSidenav_content">
             <main>
@@ -21,11 +19,11 @@
                       &nbsp;
                     </div>
                     <div class="row">
-                      <div class="col-4">
+                      <div class="col-md-4 col-sm-12">
                           <div class="card mb-4">
                               <div class="card-header">
                                   <i class="fas fa-chart-area mr-1"></i>
-                                  Area Chart Example
+                                  <small>Area Chart Example</small>
                               </div>
                               <div class="card-body">
                                 <form class="form-inline">
@@ -42,11 +40,11 @@
                               </div>
                           </div>
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-sm-12">
                         <div class="card mb-4">
                           <div class="card-header">
                               <i class="fas fa-dollar-sign mr-1"></i>
-                              Daily Rewards
+                            <small>Daily Rewards</small>
                           </div>
                           <div class="card-body">
                             <table class="table">
@@ -72,11 +70,11 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-sm-12">
                         <div class="card mb-4">
                           <div class="card-header">
                               <i class="fas fa-user-cog mr-1"></i>
-                              Settings
+                              <small>Settings</small>
                           </div>
                           <div class="card-body">
                             <form>
@@ -111,7 +109,7 @@
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-bar mr-1"></i>
-                                    Bar Chart Example
+                                  <small>Bar Chart Example</small>
                                 </div>
                                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
@@ -124,7 +122,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
                                 </table>
                             </div>
                         </div>
@@ -159,22 +157,34 @@
       function getPosts() {
         const username = $("#username").val();
         let today = moment().utc().format().split("Z")[0];
-        console.log('today', today)
+
         blurt.api.getDiscussionsByAuthorBeforeDate(username, "", today, 100, function(err, response){
           console.log('response', response);
           var table = $('#dataTable');
+          let totalRewards = 0;
+          let latestPost = moment();
+          let toPayoutDate = moment();
           response.forEach(item => {
             let {
               pending_payout_value, total_author_payout, total_curator_payout,
-              title, url,
+              created, title, url,
             } = item;
+
             let payout = pending_payout_value;
-            let timeAgo = moment(item.created).fromNow();
+            let timeAgo = moment(created).fromNow();
             if (item.abs_rshares > 0) {
-              var row = $('<tr><td><small>' + `${timeAgo} | ${payout} | <a href="${BLURT_WORLD}/${url}">${title}</a>` + '</small></td></tr>');
+              latestPost = moment(created);
+              console.log('latestPost', latestPost)
+              toPayoutDate = latestPost.add(7, 'd');
+              totalRewards = totalRewards + parseFloat(payout.split("BLURT")[0]);
+              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}/${url}">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
           });
+
+          console.log('toPayoutDate', toPayoutDate)
+          var row = $('<tr><td><small>' + `${latestPost.to(toPayoutDate)}` + '</small></td><td><small>' + `${totalRewards.toFixed(2)} BLURT | Total Pending Rewards` + '</small></td></tr>');
+          table.append(row);
           $('#dataTable').append(table);
         });
       }
