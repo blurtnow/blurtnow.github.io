@@ -203,11 +203,8 @@
 
       let rewardBalance = 0, recentClaims = 0;
       blurt.api.getRewardFund("post", function(e, t) {
-        console.log('reward fund', t)
         rewardBalance = t.reward_balance.replace(/ BLURT/, "");
-        console.log('rewardBalance', rewardBalance)
         recentClaims = t.recent_claims;
-        console.log('recentClaims', recentClaims)
       });
 
       $("#voteSlider").on("input", function() {
@@ -217,7 +214,6 @@
       function getAccount() {
         const username = $("#username").val();
         blurt.api.getAccounts([username], function(err, response) {
-          console.log('account', response[0]);
           let account = response[0];
           let { balance, vesting_shares, voting_power, received_vesting_shares, delegated_vesting_shares, vesting_withdraw_rate } = account;
           $("#balance").val(balance);
@@ -230,7 +226,7 @@
           $("#votingBar").css("width", votePct + " %")
           $("#votingPower").text(`voting power: ${votePct}%`)
 
-          $("#voteSlider").on("change", function(e) {
+          function calculateVoteValue(voteWeight) {
             let myVests = parseFloat(vesting_shares.replace(" VESTS", ""))
               + parseFloat(received_vesting_shares.replace(" VESTS", "")) 
               - parseFloat(delegated_vesting_shares.replace(" VESTS", ""))
@@ -238,9 +234,12 @@
             let fullVoteVests = (myVests * 1000000) * 0.02;
 
             let voteRatio = fullVoteVests / recentClaims;
-            let voteWeight = e.target.value;
             let voteValue = rewardBalance * voteRatio * (voteWeight / 100);
             $("#voteValue").text(voteValue.toFixed(2))
+          }
+          calculateVoteValue(100)
+          $("#voteSlider").on("change", function(e) {
+            calculateVoteValue(e.target.value);
           });
 
         });
