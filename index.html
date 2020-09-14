@@ -277,7 +277,7 @@
           authorRewards.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { author, vesting_payout, permlink } = op[1];
-            let timeAgo = moment(timestamp).fromNow();
+            let timeAgo = moment.utc().to(moment.utc(timestamp));
             let title = `@${author}/${permlink}`;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             authorRewardsTable.append(row);
@@ -306,7 +306,7 @@
           curationRewards.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { comment_author, reward, comment_permlink } = op[1];
-            let timeAgo = moment(timestamp).fromNow();
+            let timeAgo = moment.utc().to(moment.utc(timestamp));
             let title = `@${comment_author}/${comment_permlink}`;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             curationRewardsTable.append(row);
@@ -334,7 +334,7 @@
           votes.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { author, permlink, voter, weight } = op[1];
-            let timeAgo = moment(timestamp).local().fromNow();
+            let timeAgo = moment.utc().to(moment.utc(timestamp));
             let voteWeight = weight / 100;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `<a href="${BLURT_WORLD}/@${voter}" target="_blank">${voter}</a> (${voteWeight}%) upvote <i>${permlink}</i>` + '</small></td></tr>');
             votesTable.append(row);
