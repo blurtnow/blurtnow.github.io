@@ -194,10 +194,26 @@
       const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
       blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
-      function M(e) {
-        var t = e * u;
-        return t = t.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-      }
+      let totalVestingFund = 0, totalVestingShares = 0;
+      blurt.api.getDynamicGlobalProperties(function(e, t) {
+        let { total_vesting_fund_blurt, total_vesting_shares } = t;
+        totalVestingFund = parseInt(total_vesting_fund_blurt.replace(" BLURT", ""));
+        totalVestingShares = parseInt(total_vesting_shares.replace(" VESTS", ""));
+      });
+
+      let rewardBalance = 0, recentClaims = 0;
+      blurt.api.getRewardFund("post", function(e, t) {
+        console.log('reward fund', t)
+        rewardBalance = t.reward_balance.replace(/ BLURT/, "");
+        console.log('rewardBalance', rewardBalance)
+        recentClaims = t.recent_claims;
+        console.log('recentClaims', recentClaims)
+      });
+
+      $("#voteSlider").on("input", function() {
+        $("#voteWeight").text($(this).val())
+      });
+
       function getAccount() {
         const username = $("#username").val();
         blurt.api.getAccounts([username], function(err, response) {
@@ -209,24 +225,24 @@
           vesting_shares = parseFloat(vesting_shares.split(" ")[0]).toFixed(3);
           $("#vestingShares").val(vesting_shares + " BP");
 
-          $("#voteSlider").on("input", function() {
-            $("#voteWeight").text($(this).val())
-          });
-          $("#voteSlider").on("change", function() {
-            // TO DO:
-            var d = 0;
-            var a = M(d = parseInt(parseInt(vesting_shares.replace(" VESTS", "")) + parseInt(received_vesting_shares.replace(" VESTS", "")) - parseInt(delegated_vesting_shares.replace(" VESTS", "")) - parseInt(vesting_withdraw_rate.replace(" VESTS", ""))));
-                $("#vesting_shares").text(a + " " + "P");
-            var p = parseInt(100 * voting_power * (100 * $("#vote_weight").text()) / b);
-                p = parseInt((p + 49) / 50);
-                var c = parseInt(d * p * 100)
-                  , u = ((c + 2e12) * (c + 2e12) - 4e24) / (c + 8e12) * g * h;
-                $("#vote_value").text(u.toFixed(2))
-          });
           let votePct = voting_power / 100;
           $("#votingBar").attr("aria-valuenow", votePct)
           $("#votingBar").css("width", votePct + " %")
           $("#votingPower").text(`voting power: ${votePct}%`)
+
+          $("#voteSlider").on("change", function(e) {
+            let myVests = parseFloat(vesting_shares.replace(" VESTS", ""))
+              + parseFloat(received_vesting_shares.replace(" VESTS", "")) 
+              - parseFloat(delegated_vesting_shares.replace(" VESTS", ""))
+              - parseFloat(vesting_withdraw_rate.replace(" VESTS", ""));
+            let fullVoteVests = (myVests * 1000000) * 0.02;
+
+            let voteRatio = fullVoteVests / recentClaims;
+            let voteWeight = e.target.value;
+            let voteValue = rewardBalance * voteRatio * (voteWeight / 100);
+            $("#voteValue").text(voteValue.toFixed(2))
+          });
+
         });
       }
 
