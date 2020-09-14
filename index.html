@@ -246,7 +246,7 @@
             } = item;
 
             let payout = pending_payout_value;
-            let timeAgo = moment(created).fromNow();
+            let timeAgo = moment.utc().to(moment.utc(created));
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
               totalRewards = totalRewards + parseFloat(payout.split("BLURT")[0]);
@@ -334,7 +334,7 @@
           votes.forEach(item => {
             let { block, op, timestamp } = item[1];
             let { author, permlink, voter, weight } = op[1];
-            let timeAgo = moment(timestamp).fromNow();
+            let timeAgo = moment(timestamp).local().fromNow();
             let voteWeight = weight / 100;
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `<a href="${BLURT_WORLD}/@${voter}" target="_blank">${voter}</a> (${voteWeight}%) upvote <i>${permlink}</i>` + '</small></td></tr>');
             votesTable.append(row);
