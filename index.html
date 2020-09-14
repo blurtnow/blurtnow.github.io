@@ -194,12 +194,16 @@
       const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
       blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
+      function M(e) {
+        var t = e * u;
+        return t = t.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+      }
       function getAccount() {
         const username = $("#username").val();
         blurt.api.getAccounts([username], function(err, response) {
           console.log('account', response[0]);
           let account = response[0];
-          let { balance, vesting_shares, voting_power } = account;
+          let { balance, vesting_shares, voting_power, received_vesting_shares, delegated_vesting_shares, vesting_withdraw_rate } = account;
           $("#balance").val(balance);
 
           vesting_shares = parseFloat(vesting_shares.split(" ")[0]).toFixed(3);
@@ -210,6 +214,14 @@
           });
           $("#voteSlider").on("change", function() {
             // TO DO:
+            var d = 0;
+            var a = M(d = parseInt(parseInt(vesting_shares.replace(" VESTS", "")) + parseInt(received_vesting_shares.replace(" VESTS", "")) - parseInt(delegated_vesting_shares.replace(" VESTS", "")) - parseInt(vesting_withdraw_rate.replace(" VESTS", ""))));
+                $("#vesting_shares").text(a + " " + "P");
+            var p = parseInt(100 * voting_power * (100 * $("#vote_weight").text()) / b);
+                p = parseInt((p + 49) / 50);
+                var c = parseInt(d * p * 100)
+                  , u = ((c + 2e12) * (c + 2e12) - 4e24) / (c + 8e12) * g * h;
+                $("#vote_value").text(u.toFixed(2))
           });
           let votePct = voting_power / 100;
           $("#votingBar").attr("aria-valuenow", votePct)
@@ -238,7 +250,7 @@
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
               totalRewards = totalRewards + parseFloat(payout.split("BLURT")[0]);
-              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}/${url}">${title}</a>` + '</small></td></tr>');
+              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
           });
