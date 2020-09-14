@@ -271,6 +271,7 @@
 
         blurt.api.getAccountHistory(username, -1, 1000, function(err, response){
           let authorRewards = response.slice(0).filter(item => item[1].op[0] === "author_reward")
+          authorRewards.sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp));
           let authorRewardsTable = $('#latestAuthorRewards');
           let authorRewardsToday = 0.0, authorRewardsYesterday = 0.0;
           authorRewards.forEach(item => {
@@ -298,7 +299,8 @@
             authorRewardsTable.append(row);
           }
 
-          let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward")
+          let curationRewards = response.slice(0).filter(item => item[1].op[0] === "curation_reward");
+          curationRewards.sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp));
           let curationRewardsTable = $('#latestCurationRewards');
           let curationRewardsToday = 0.0, curationRewardsYesterday = 0.0;
           curationRewards.forEach(item => {
@@ -326,7 +328,8 @@
             curationRewardsTable.append(row);
           }
 
-          let votes = response.slice(0).filter(item => item[1].op[0] === "vote" && item[1].op[1].author === username)
+          let votes = response.slice(0).filter(item => item[1].op[0] === "vote" && item[1].op[1].author === username);
+          votes.sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp));
           let votesTable = $('#latestUpvotes');
           votes.forEach(item => {
             let { block, op, timestamp } = item[1];
