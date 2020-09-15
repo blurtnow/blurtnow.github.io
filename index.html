@@ -281,8 +281,12 @@
           let { balance, vesting_shares, voting_power, received_vesting_shares, delegated_vesting_shares, vesting_withdraw_rate } = account;
           $("#balance").val(balance);
 
-          vesting_shares = parseFloat(vesting_shares.split(" ")[0]).toFixed(3);
-          $("#vestingShares").val(vesting_shares + " BP");
+          let vestingShares = parseInt(vesting_shares.replace(" VESTS", ""))
+              + parseInt(received_vesting_shares.replace(" VESTS", "")) 
+              - parseInt(delegated_vesting_shares.replace(" VESTS", ""))
+              - parseInt(vesting_withdraw_rate.replace(" VESTS", ""));
+          console.log('vestingShares');
+          $("#vestingShares").val(vestingShares + " BP");
 
           let votePct = voting_power / 100;
           $("#votingBar").attr("aria-valuenow", votePct)
@@ -303,10 +307,10 @@
           })
 
           function calculateVoteValue(voteWeight) {
-            let myVests = parseFloat(vesting_shares.replace(" VESTS", ""))
-              + parseFloat(received_vesting_shares.replace(" VESTS", "")) 
-              - parseFloat(delegated_vesting_shares.replace(" VESTS", ""))
-              - parseFloat(vesting_withdraw_rate.replace(" VESTS", ""));
+            let myVests = parseInt(vesting_shares.replace(" VESTS", ""))
+              + parseInt(received_vesting_shares.replace(" VESTS", "")) 
+              - parseInt(delegated_vesting_shares.replace(" VESTS", ""))
+              - parseInt(vesting_withdraw_rate.replace(" VESTS", ""));
             let fullVoteVests = (myVests * 1000000) * 0.02;
 
             let voteRatio = fullVoteVests / recentClaims;
