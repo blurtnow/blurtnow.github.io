@@ -311,6 +311,7 @@
 
             let voteRatio = fullVoteVests / recentClaims;
             let voteValue = rewardBalance * voteRatio * (voteWeight / 100);
+            voteValue = voteValue * 0.4587054833239118;
             $("#voteValue").text(voteValue.toFixed(2))
           }
 
