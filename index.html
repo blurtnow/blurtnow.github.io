@@ -465,6 +465,9 @@
         window.localStorage.setItem("api_node", selectedApiNode);
         blurt.api.setOptions({ url: `https://${selectedApiNode}`, useAppbaseApi: true });
 
+        var themeurl = $("#themes").val();
+        window.localStorage.setItem("themeurl", themeurl);
+
         getAccount();
         getPosts();
         getAccountHistory();
@@ -496,10 +499,21 @@
       themes.forEach(item => {
         $("#themes").append(`<option value="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.2/${item}/bootstrap.min.css">${item}</option>`);
       });
-      var themesheet = $('<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.2/cerulean/bootstrap.min.css" rel="stylesheet" />');
+
+      let storedThemeUrl = window.localStorage.getItem("themeurl");
+      let themesheet = "";
+      if (storedThemeUrl) {
+        $("#themes").val(storedThemeUrl);
+        themesheet = $(`<link href="${storedThemeUrl}" rel="stylesheet" />`);
+      } else {
+        let defaultThemeUrl = "https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.2/cerulean/bootstrap.min.css";
+        $("#themes").val(defaultThemeUrl);
+        themesheet = $(`<link href="${defaultThemeUrl}" rel="stylesheet" />`);
+      }
       themesheet.appendTo('head');
+
       $("#themes").on("change", e => {
-        var themeurl = $("#themes").val(); 
+        var themeurl = $("#themes").val();
         themesheet.attr('href',themeurl);
       });
     </script>
