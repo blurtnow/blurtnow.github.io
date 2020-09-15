@@ -106,9 +106,21 @@
                                 </div>
                               </div>
                               <div class="form-group row">
+                                <label for="node" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm">Node</label>
+                                <div class="col-lg-8 col-md-9 col-sm-9">
+                                  <select id="api_nodes" class="custom-select custom-select-sm">
+                                    <option value="rpc.blurt.world">rpc.blurt.world</option>
+                                    <option value="api.blurt.tools">api.blurt.tools</option>
+                                    <option value="blurtd.privex.io">blurtd.privex.io</option>
+                                    <option value="blurt-rpc.steem.buzz">blurt-rpc.steem.buzz</option>
+                                    <option value="api.blurt.blog">api.blurt.blog</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row">
                                 <label for="inputPassword" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm"></label>
                                 <div class="col-lg-8 col-md-9 col-sm-9">
-                                  <button type="submit" class="btn btn-primary mb-2 btn-sm" id="save">Save</button>
+                                  <button type="button" class="btn btn-primary mb-2 btn-sm" id="save">Save</button>
                                 </div>
                               </div>
                             </form>
@@ -192,7 +204,12 @@
     <script>
       const BLURT_WORLD = "https://blurt.world";
       const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
-      blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
+      let storedApiNode = window.localStorage.getItem("api_node");
+      if (!storedApiNode) {
+        storedApiNode = "rpc.blurt.world";
+        $("#api_nodes").val(storedApiNode);
+      }
+      blurt.api.setOptions({ url: `https://${storedApiNode}`, useAppbaseApi: true });
 
       $("#voteSlider").on("input", function() {
         $("#voteWeight").text($(this).val())
@@ -384,6 +401,10 @@
         let username = $("#username").val();
         window.localStorage.setItem("username", username);
         $("#usernameDisp").text(username);
+
+        let selectedApiNode = $("#api_nodes").val();
+        window.localStorage.setItem("api_node", selectedApiNode);
+        blurt.api.setOptions({ url: `https://${selectedApiNode}`, useAppbaseApi: true });
 
         getAccount();
         getPosts();
