@@ -266,8 +266,8 @@
       let storedApiNode = window.localStorage.getItem("api_node");
       if (!storedApiNode) {
         storedApiNode = "rpc.blurt.world";
-        $("#api_nodes").val(storedApiNode);
       }
+      $("#api_nodes").val(storedApiNode);
       blurt.api.setOptions({ url: `https://${storedApiNode}`, useAppbaseApi: true });
 
       $("#voteSlider").on("input", function() {
