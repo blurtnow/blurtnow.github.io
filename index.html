@@ -23,12 +23,12 @@
                     </div>
                     <div class="row">
                       <div class="col-lg-4 col-md-12 col-sm-12">
-                          <div class="card mb-4">
+                          <div class="card p-0" style="height: 155px; overflow-y: auto;">
                               <div class="card-header pt-0 pb-0">
                                   <i class="fas fa-chart-area mr-1"></i>
                                   @<small id="usernameDisp"></small>
                               </div>
-                              <div class="card-body">
+                              <div class="card-body pt-0 pb-0">
                                 <table style="display: flex;">
                                   <tr>
                                     <td>
@@ -56,35 +56,71 @@
                           </div>
                       </div>
                       <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="card mb-4">
+                        <div class="card p-0" style="height: 155px; overflow-y: auto;">
                           <div class="card-header pt-0 pb-0">
                               <i class="fas fa-dollar-sign mr-1"></i>
                             <small>Daily Rewards</small>
                           </div>
                           <div class="card-body pt-0 pb-0">
-                            <div>
-                              <div class="form-group row mb-0">
-                                <label for="staticEmail" class="col-sm-6 col-form-label col-form-label-sm">Curation Today</label>
-                                <div class="col-sm-6">
-                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="curationRewardsToday" value="0.0 BP" />
+                            <div class="p-0 m-0">
+                              <div class="form-group row mt-0 mb-0">
+                                <label
+                                  for="staticEmail"
+                                  class="col-sm-6 col-form-label col-form-label-sm"
+                                >Curation Today</label>
+                                <div class="col-sm-6 mt-0 mb-0">
+                                  <input
+                                    readonly
+                                    type="text"
+                                    class="form-control-sm form-control-plaintext"
+                                    id="curationRewardsToday"
+                                    value="0.000 BP"
+                                  />
                                 </div>
                               </div>
-                              <div class="form-group row mb-0">
-                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Author Today</label>
-                                <div class="col-sm-6">
-                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="authorRewardsToday" value="0.0 BP" />
+                              <div class="form-group row mt-0 mb-0">
+                                <label
+                                  for="inputPassword"
+                                  class="col-sm-6 col-form-label col-form-label-sm"
+                                >Author Today</label>
+                                <div class="col-sm-6 mt-0 mt-0 mb-0">
+                                  <input
+                                    readonly
+                                    type="text"
+                                    class="form-control-sm form-control-plaintext"
+                                    id="authorRewardsToday"
+                                    value="0.000 BP"
+                                  />
                                 </div>
                               </div>
-                              <div class="form-group row mb-0">
-                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Curation Yesterday</label>
-                                <div class="col-sm-6">
-                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="curationRewardsYesterday" value="0.0 BP" />
+                              <div class="form-group row mt-0 mb-0">
+                                <label
+                                  for="inputPassword"
+                                  class="col-sm-6 col-form-label col-form-label-sm"
+                                >Curation Yesterday</label>
+                                <div class="col-sm-6 mt-0 mb-0">
+                                  <input
+                                    readonly
+                                    type="text"
+                                    class="form-control-sm form-control-plaintext"
+                                    id="curationRewardsYesterday"
+                                    value="0.000 BP"
+                                  />
                                 </div>
                               </div>
-                              <div class="form-group row mb-0">
-                                <label for="inputPassword" class="col-sm-6 col-form-label col-form-label-sm">Author Yesterday</label>
-                                <div class="col-sm-6">
-                                  <input type="text" readonly class="form-control-sm form-control-plaintext" id="authorRewardsYesterday" value="0.0 BP" />
+                              <div class="form-group row mt-0 mb-0">
+                                <label
+                                  for="inputPassword"
+                                  class="col-sm-6 col-form-label col-form-label-sm"
+                                >Author Yesterday</label>
+                                <div class="col-sm-6 mt-0 mb-0">
+                                  <input
+                                    readonly
+                                    type="text"
+                                    class="form-control-sm form-control-plaintext"
+                                    id="authorRewardsYesterday"
+                                    value="0.000 BP"
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -92,20 +128,20 @@
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="card mb-4">
+                        <div class="card p-0" style="height: 155px; overflow-y: auto;">
                           <div class="card-header pt-0 pb-0">
                               <i class="fas fa-user-cog mr-1"></i>
                               <small>Settings</small>
                           </div>
-                          <div class="card-body">
-                            <form>
-                              <div class="form-group row">
+                          <div class="card-body p-0">
+                            <form class="m-0">
+                              <div class="form-group row m-1">
                                 <label for="staticEmail" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm">Username</label>
                                 <div class="col-lg-8 col-md-9 col-sm-9">
                                   <input type="text" class="form-control form-control-sm" id="username" value="eastmael">
                                 </div>
                               </div>
-                              <div class="form-group row">
+                              <div class="form-group row m-1">
                                 <label for="node" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm">Node</label>
                                 <div class="col-lg-8 col-md-9 col-sm-9">
                                   <select id="api_nodes" class="custom-select custom-select-sm">
@@ -117,7 +153,7 @@
                                   </select>
                                 </div>
                               </div>
-                              <div class="form-group row">
+                              <div class="form-group row m-1">
                                 <label for="inputPassword" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm"></label>
                                 <div class="col-lg-8 col-md-9 col-sm-9">
                                   <button type="button" class="btn btn-primary mb-2 btn-sm" id="save">Save</button>
@@ -128,14 +164,14 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row mt-0 mb-2">
+                    <div class="row mt-0 m-2">
                       <div class="col-12">
                         <div class="progress">
                           <div id="votingBar" class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"><span id="votingPower">voting power: 75</span></div>
                         </div>
                       </div>
                     </div>
-                    <div class="card mb-4">
+                    <div class="card mb-1">
                       <div class="card-header pt-0 pb-0">
                           <i class="fas fa-table mr-1"></i>
                           <small>Latest Upvotes</small>
@@ -147,7 +183,7 @@
                           </div>
                       </div>
                     </div>
-                    <div class="card mb-4">
+                    <div class="card mb-1">
                       <div class="card-header pt-0 pb-0">
                           <i class="fas fa-table mr-1"></i>
                           <small>Latest Curation Rewards</small>
@@ -159,7 +195,7 @@
                           </div>
                       </div>
                     </div>
-                    <div class="card mb-4">
+                    <div class="card mb-1">
                       <div class="card-header pt-0 pb-0">
                           <i class="fas fa-table mr-1"></i>
                           <small>Latest Author Rewards</small>
