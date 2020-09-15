@@ -194,19 +194,6 @@
       const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
       blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
-      let totalVestingFund = 0, totalVestingShares = 0;
-      blurt.api.getDynamicGlobalProperties(function(e, t) {
-        let { total_vesting_fund_blurt, total_vesting_shares } = t;
-        totalVestingFund = parseInt(total_vesting_fund_blurt.replace(" BLURT", ""));
-        totalVestingShares = parseInt(total_vesting_shares.replace(" VESTS", ""));
-      });
-
-      let rewardBalance = 0, recentClaims = 0;
-      blurt.api.getRewardFund("post", function(e, t) {
-        rewardBalance = t.reward_balance.replace(/ BLURT/, "");
-        recentClaims = t.recent_claims;
-      });
-
       $("#voteSlider").on("input", function() {
         $("#voteWeight").text($(this).val())
       });
@@ -226,6 +213,19 @@
           $("#votingBar").css("width", votePct + " %")
           $("#votingPower").text(`voting power: ${votePct}%`)
 
+          let totalVestingFund = 0, totalVestingShares = 0;
+          let rewardBalance = 0, recentClaims = 0;
+          blurt.api.getDynamicGlobalProperties(function(e, t) {
+            let { total_vesting_fund_blurt, total_vesting_shares } = t;
+            totalVestingFund = parseInt(total_vesting_fund_blurt.replace(" BLURT", ""));
+            totalVestingShares = parseInt(total_vesting_shares.replace(" VESTS", ""));
+            blurt.api.getRewardFund("post", function(e, t) {
+              rewardBalance = parseFloat(t.reward_balance.replace(/ BLURT/, ""));
+              recentClaims = parseInt(t.recent_claims);
+              calculateVoteValue(100);
+            })
+          })
+
           function calculateVoteValue(voteWeight) {
             let myVests = parseFloat(vesting_shares.replace(" VESTS", ""))
               + parseFloat(received_vesting_shares.replace(" VESTS", "")) 
@@ -237,7 +237,7 @@
             let voteValue = rewardBalance * voteRatio * (voteWeight / 100);
             $("#voteValue").text(voteValue.toFixed(2))
           }
-          calculateVoteValue(100)
+
           $("#voteSlider").on("change", function(e) {
             calculateVoteValue(e.target.value);
           });
