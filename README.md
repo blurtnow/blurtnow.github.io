@@ -6,9 +6,9 @@ They say that necessity is the mother of all inventions. Although I'm not sure a
 
 Sites:
 
-http://blurt-now.com/
-https://blurt.gitlab.io/openblurt/blurt-now/
-https://blurtnow.github.io/
+* http://blurt-now.com/
+* https://blurt.gitlab.io/openblurt/blurt-now/
+* https://blurtnow.github.io/
 
 # 1. Background
 
