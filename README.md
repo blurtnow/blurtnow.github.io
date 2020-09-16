@@ -1,4 +1,4 @@
-#Blurtopian Development: Blurt-Now
+# Blurtopian Development: Blurt-Now
 
 ![image.png](https://img.blurt.world/blurt/eastmael/8368cfbc9de61b1e7b614e489920fc64679aa396.png)
 
