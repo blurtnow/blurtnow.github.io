@@ -281,12 +281,11 @@
           let { balance, vesting_shares, voting_power, received_vesting_shares, delegated_vesting_shares, vesting_withdraw_rate } = account;
           $("#balance").val(balance);
 
-          let vestingShares = parseInt(vesting_shares.replace(" VESTS", ""))
-              + parseInt(received_vesting_shares.replace(" VESTS", "")) 
-              - parseInt(delegated_vesting_shares.replace(" VESTS", ""))
-              - parseInt(vesting_withdraw_rate.replace(" VESTS", ""));
-          console.log('vestingShares');
-          $("#vestingShares").val(vestingShares + " BP");
+          let vestingShares = parseInt(vesting_shares.replace(" VESTS", "").replace(".", ""))
+              + parseInt(received_vesting_shares.replace(" VESTS", "").replace(".", "")) 
+              - parseInt(delegated_vesting_shares.replace(" VESTS", "").replace(".", ""))
+              - parseInt(vesting_withdraw_rate.replace(" VESTS", "").replace(".", ""));
+          $("#vestingShares").val((vestingShares / 1000000).toLocaleString() + " BP");
 
           let votePct = voting_power / 100;
           $("#votingBar").attr("aria-valuenow", votePct)
@@ -345,7 +344,7 @@
             let timeAgo = moment.utc().to(moment.utc(created));
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
-              totalRewards = totalRewards + parseFloat(payout.split("BLURT")[0]);
+              totalRewards = totalRewards + parseFloat(payout.replace(" BLURT", ""));
               var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
@@ -363,7 +362,7 @@
 
       function getAccountHistory() {
         const username = $("#username").val();
-        let today = moment().utc();
+        let today = moment.utc(new Date());
 
         blurt.api.getAccountHistory(username, -1, 1000, function(err, response){
           let authorRewards = response.slice(0).filter(item => item[1].op[0] === "author_reward")
@@ -378,10 +377,10 @@
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${vesting_payout.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             authorRewardsTable.append(row);
 
-            if (today.isSame(moment(timestamp), "day")) {
-              authorRewardsToday += parseFloat(vesting_payout.split(" ")[0]);
-            } else if (today.subtract(1, 'days').isSame(moment(timestamp), "day")) {
-              authorRewardsYesterday += parseFloat(vesting_payout.split(" ")[0]);
+            if (today.isSame(moment.utc(timestamp), "day")) {
+              authorRewardsToday += parseFloat(vesting_payout.replace(" VESTS", ""));
+            } else if (today.subtract(1, 'days').isSame(moment.utc(timestamp), "day")) {
+              authorRewardsYesterday += parseFloat(vesting_payout.replace(" VESTS", ""));
             }
           });
           
@@ -407,10 +406,10 @@
             var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${reward.replace("VESTS", "BP")} | <a href="${BLURT_EXPLORER}/${title}" target="_blank">${title}</a>` + '</small></td></tr>');
             curationRewardsTable.append(row);
 
-            if (today.isSame(moment(timestamp), "day")) {
-              curationRewardsToday += parseFloat(reward.split(" ")[0]);
-            } else if (today.subtract(1, 'days').isSame(moment(timestamp), "day")) {
-              curationRewardsYesterday += parseFloat(reward.split(" ")[0]);
+            if (today.isSame(moment.utc(timestamp), "day")) {
+              curationRewardsToday += parseFloat(reward.replace(" VESTS", ""));
+            } else if (today.subtract(1, 'days').isSame(moment.utc(timestamp), "day")) {
+              curationRewardsYesterday += parseFloat(reward.replace(" VESTS", ""));
             }
           });
 
