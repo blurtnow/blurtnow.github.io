@@ -4,6 +4,12 @@
 
 They say that necessity is the mother of all inventions. Although I'm not sure about the accuracy of such quote, I learned from my mentors to always attribute each and every achievement to the God of the Bible.
 
+Sites:
+
+http://blurt-now.com/
+https://blurt.gitlab.io/openblurt/blurt-now/
+https://blurtnow.github.io/
+
 # 1. Background
 
 Just last week, @krevasilis sent a message in discord asking if there was site similar to [steemnow](https://www.steemnow.com/) or [hive-now](https://hive-now.com/) for blurt. I waited for some time to see if anyone would chime in and build it, but didn't see any.
