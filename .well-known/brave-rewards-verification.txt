@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: blurt-now.com
+Token: 52fea5c8535c0fd26e85930062db8553ce04eb89ae32102dd16fdac5371a3778
