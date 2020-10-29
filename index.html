@@ -63,7 +63,7 @@
                                         />
                                       </div>
                                       <div>
-                                        $<span id="voteValue">0.00</span>
+                                        $BLURT <span id="voteValue">0.00</span>
                                       </div>
                                     </td>
                                   </tr>
@@ -282,7 +282,7 @@
           $("#balance").val(balance);
 
           let vestingShares = parseInt(vesting_shares.replace(" VESTS", "").replace(".", ""))
-              + parseInt(received_vesting_shares.replace(" VESTS", "").replace(".", "")) 
+              + parseInt(received_vesting_shares.replace(" VESTS", "").replace(".", ""))
               - parseInt(delegated_vesting_shares.replace(" VESTS", "").replace(".", ""))
               - parseInt(vesting_withdraw_rate.replace(" VESTS", "").replace(".", ""));
           $("#vestingShares").val((vestingShares / 1000000).toLocaleString() + " BP");
@@ -306,15 +306,15 @@
           })
 
           function calculateVoteValue(voteWeight) {
+            voteWeight = voteWeight * 100;
             let myVests = parseInt(vesting_shares.replace(" VESTS", ""))
-              + parseInt(received_vesting_shares.replace(" VESTS", "")) 
+              + parseInt(received_vesting_shares.replace(" VESTS", ""))
               - parseInt(delegated_vesting_shares.replace(" VESTS", ""))
               - parseInt(vesting_withdraw_rate.replace(" VESTS", ""));
-            let fullVoteVests = (myVests * 1000000) * 0.02;
-
-            let voteRatio = fullVoteVests / recentClaims;
-            let voteValue = rewardBalance * voteRatio * (voteWeight / 100);
-            voteValue = voteValue * 0.4587054833239118;
+            const vestingShares = parseInt(myVests * 1e6, 10);
+            const power = voting_power * voteWeight / 10000 / 50;
+            const rshares = power * vestingShares / 10000;
+            voteValue = rshares*(rshares+2 * 2e12)/(rshares+4 * 2e12) / recentClaims * rewardBalance
             $("#voteValue").text(voteValue.toFixed(2))
           }
 
@@ -383,7 +383,7 @@
               authorRewardsYesterday += parseFloat(vesting_payout.replace(" VESTS", ""));
             }
           });
-          
+
           let authRewTodTxt = authorRewardsToday.toFixed(3) + " BP";
           $('#authorRewardsToday').val(authRewTodTxt);
           let authRewYesTxt = authorRewardsYesterday.toFixed(3) + " BP";
