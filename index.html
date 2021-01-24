@@ -288,8 +288,7 @@
         $("#voteWeight").text($(this).val())
       });
 
-      function getAccount() {
-        const username = $("#username").val();
+      function getAccount(username) {
         blurt.api.getAccounts([username], function(err, response) {
           let account = response[0];
           let { balance, vesting_shares, voting_power, received_vesting_shares, delegated_vesting_shares, vesting_withdraw_rate } = account;
@@ -339,8 +338,7 @@
         });
       }
 
-      function getPosts() {
-        const username = $("#username").val();
+      function getPosts(username) {
         let today = moment().utc().format().split("Z")[0];
 
         blurt.api.getDiscussionsByAuthorBeforeDate(username, "", today, 100, function(err, response){
@@ -374,8 +372,7 @@
         });
       }
 
-      function getAccountHistory() {
-        const username = $("#username").val();
+      function getAccountHistory(username) {
         let today = moment.utc(new Date());
 
         blurt.api.getAccountHistory(username, -1, 1000, function(err, response){
@@ -459,16 +456,22 @@
       let username = "";
       let storedUsername = window.localStorage.getItem("username");
       if (storedUsername) {
+        let queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        storedUsername = urlParams.get('username') || storedUsername;
+
         $("#username").val(storedUsername);
         username = storedUsername;
       } else {
         username = $("#username").val();
       }
+
+      console.log(username)
       $("#usernameDisp").text(username);
 
-      getAccount();
-      getPosts();
-      getAccountHistory();
+      getAccount(username);
+      getPosts(username);
+      getAccountHistory(username);
       $("#save").on('click', function() {
         $("#latestUpvotes tr").remove();
         $("#latestCurationRewards tr").remove();
@@ -489,9 +492,9 @@
         var themeurl = $("#themes").val();
         window.localStorage.setItem("themeurl", themeurl);
 
-        getAccount();
-        getPosts();
-        getAccountHistory();
+        getAccount(username);
+        getPosts(username);
+        getAccountHistory(username);
       });
 
       let themes = [
