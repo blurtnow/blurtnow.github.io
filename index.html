@@ -162,10 +162,19 @@
                                 <div class="col-lg-8 col-md-9 col-sm-9">
                                   <select id="api_nodes" class="custom-select custom-select-sm">
                                     <option value="rpc.blurt.world">rpc.blurt.world</option>
-                                    <option value="api.blurt.tools">api.blurt.tools</option>
-                                    <option value="blurtd.privex.io">blurtd.privex.io</option>
-                                    <option value="blurt-rpc.steem.buzz">blurt-rpc.steem.buzz</option>
+                                    <option value="api.blurt.blog">api.blurtworld.com</option>
                                     <option value="api.blurt.blog">api.blurt.blog</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row m-1">
+                                <label for="node" class="col-lg-4 col-md-3 col-sm-3 col-form-label col-form-label-sm">Site</label>
+                                <div class="col-lg-8 col-md-9 col-sm-9">
+                                  <select id="sites" class="custom-select custom-select-sm">
+                                    <option value="blurt.blog">blurt.blog</option>
+                                    <option value="blurtter.com">blurtter.com</option>
+                                    <option value="blurtworld.com">blurtworld.com</option>
+                                    <option value="blurt.world">blurt.world</option>
                                   </select>
                                 </div>
                               </div>
@@ -261,8 +270,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@blurtfoundation/blurtjs/dist/blurt.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
     <script>
-      const BLURT_WORLD = "https://blurt.world";
       const BLURT_EXPLORER = "https://blocks.blurtwallet.com/#";
+
+      let storedSite = window.localStorage.getItem("site");
+      if (!storedSite) {
+        storedSite = "https://blurt.world";
+      }
+      $("#sites").val(storedSite);
+
       let storedApiNode = window.localStorage.getItem("api_node");
       if (!storedApiNode) {
         storedApiNode = "rpc.blurt.world";
@@ -345,7 +360,7 @@
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
               totalRewards = totalRewards + parseFloat(payout.replace(" BLURT", ""));
-              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="${BLURT_WORLD}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
+              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="https://${storedSite}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
           });
@@ -431,7 +446,7 @@
             let { author, permlink, voter, weight } = op[1];
             let timeAgo = moment.utc().to(moment.utc(timestamp));
             let voteWeight = weight / 100;
-            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `<a href="${BLURT_WORLD}/@${voter}" target="_blank">${voter}</a> (${voteWeight}%) upvote <i>${permlink}</i>` + '</small></td></tr>');
+            var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `<a href="https://${storedSite}/@${voter}" target="_blank">${voter}</a> (${voteWeight}%) upvote <i>${permlink}</i>` + '</small></td></tr>');
             votesTable.append(row);
           });
           if($('#latestUpvotes tr').length === 0) {
