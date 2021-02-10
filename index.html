@@ -357,7 +357,7 @@
             if (item.abs_rshares > 0) {
               latestPost = moment(created);
               totalRewards = totalRewards + parseFloat(payout.replace(" BLURT", ""));
-              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="https://${site}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
+              var row = $('<tr><td><small>' + `${timeAgo}` + '</small></td><td><small>' + `${payout} | <a href="https://${storedSite}${url}" target="_blank">${title}</a>` + '</small></td></tr>');
               table.append(row);
             }
           });
@@ -466,7 +466,6 @@
         username = $("#username").val();
       }
 
-      console.log(username)
       $("#usernameDisp").text(username);
 
       getAccount(username);
